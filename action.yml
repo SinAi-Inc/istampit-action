@@ -16,18 +16,26 @@ runs:
         python-version: '3.11'
     - run: pip install --upgrade pip opentimestamps-client
       shell: bash
-    - run: |
-        python - <<'PY'
-        import glob, os, subprocess, json
-        paths = os.environ['INPUT_PATHS']
-        files = [f for g in paths.split(',') for f in glob.glob(g.strip(), recursive=True)]
-        receipts = []
-        for f in files:
-            subprocess.check_call(['ots','stamp',f])
-            r = f + '.ots'
-            if os.environ.get('INPUT_UPGRADE','false').lower() == 'true':
-                subprocess.call(['ots','upgrade', r])
-            receipts.append(r)
-        print(json.dumps({'receipts': receipts}))
-        PY
-      shell: bash
+  - run: |
+    python - <<'PY'
+    import glob, os, subprocess, json, sys
+    raw = ${PATHS_JSON}
+    if not raw:
+      print('error: no paths provided', file=sys.stderr)
+      sys.exit(1)
+    patterns = [p for p in raw.split(',') if p.strip()]
+    files = [f for g in patterns for f in glob.glob(g.strip(), recursive=True)]
+    if not files:
+      print('warning: no files matched patterns', file=sys.stderr)
+    receipts = []
+    for f in files:
+      subprocess.check_call(['ots','stamp',f])
+      r = f + '.ots'
+      if os.environ.get('INPUT_UPGRADE','false').lower() == 'true':
+        subprocess.call(['ots','upgrade', r])
+      receipts.append(r)
+    print(json.dumps({'receipts': receipts}))
+    PY
+    shell: bash
+    env:
+    PATHS_JSON: ${{ inputs.paths }}
