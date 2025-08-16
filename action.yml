@@ -2,40 +2,44 @@ name: iStampit Timestamp
 description: "Stamp build artifacts with OpenTimestamps"
 inputs:
   paths:
-    description: "Glob(s) of files to stamp"
+    description: "Comma-separated glob(s) of files to stamp"
     required: true
   upgrade:
-    description: "Upgrade proofs if calendars can complete them"
+    description: "Set to 'true' to attempt upgrading proofs after stamping"
     required: false
     default: "false"
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v5
+    - name: Setup Python
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-    - run: pip install --upgrade pip opentimestamps-client
+    - name: Install OpenTimestamps client
       shell: bash
-  - run: |
-    python - <<'PY'
-    import glob, os, subprocess, json, sys
-    raw = ${PATHS_JSON}
-    if not raw:
-      print('error: no paths provided', file=sys.stderr)
-      sys.exit(1)
-    patterns = [p for p in raw.split(',') if p.strip()]
-    files = [f for g in patterns for f in glob.glob(g.strip(), recursive=True)]
-    if not files:
-      print('warning: no files matched patterns', file=sys.stderr)
-    receipts = []
-    for f in files:
-      subprocess.check_call(['ots','stamp',f])
-      r = f + '.ots'
-      if os.environ.get('INPUT_UPGRADE','false').lower() == 'true':
-        subprocess.call(['ots','upgrade', r])
-      receipts.append(r)
-    print(json.dumps({'receipts': receipts}))
-    PY
-    shell: bash
-    env:
-    PATHS_JSON: ${{ inputs.paths }}
+      run: pip install --upgrade pip opentimestamps-client
+    - name: Stamp artifacts
+      shell: bash
+      env:
+        PATHS_JSON: ${{ inputs.paths }}
+        UPGRADE: ${{ inputs.upgrade }}
+      run: |
+        python - <<'PY'
+        import glob, os, subprocess, json, sys
+        raw = os.environ.get('PATHS_JSON','')
+        if not raw:
+            print('error: no paths provided', file=sys.stderr)
+            sys.exit(1)
+        patterns = [p for p in raw.split(',') if p.strip()]
+        files = [f for g in patterns for f in glob.glob(g.strip(), recursive=True)]
+        if not files:
+            print('warning: no files matched patterns', file=sys.stderr)
+        receipts = []
+        for f in files:
+            subprocess.check_call(['ots','stamp',f])
+            r = f + '.ots'
+            if os.environ.get('UPGRADE','false').lower() == 'true':
+                subprocess.call(['ots','upgrade', r])
+            receipts.append(r)
+        print(json.dumps({'receipts': receipts}))
+        PY
