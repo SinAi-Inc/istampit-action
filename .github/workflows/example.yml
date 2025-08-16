@@ -2,6 +2,8 @@ name: Stamp Release Assets
 on:
   release:
     types: [published]
+permissions:
+  contents: read
 jobs:
   stamp:
     runs-on: ubuntu-latest
