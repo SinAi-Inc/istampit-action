@@ -35,24 +35,24 @@ runs:
       id: stamp
       shell: bash
       run: |
-    set -euo pipefail
-    python <<'PY'
-    import glob, os, subprocess, json, sys
-    raw = "${{ inputs.paths }}"
-    patterns = [p for p in raw.split(',') if p.strip()]
-    files = [f for g in patterns for f in glob.glob(g.strip(), recursive=True)]
-    if not files:
-      print('warning: no files matched', file=sys.stderr)
-    receipts = []
-    for f in files:
-      subprocess.check_call(['ots', 'stamp', f])
-      r = f + '.ots'
-      if "${{ inputs.upgrade }}".lower() == "true":
-        subprocess.call(['ots', 'upgrade', r])
-      receipts.append(r)
-    out = json.dumps(receipts)
-    gh_out = os.environ.get('GITHUB_OUTPUT')
-    if gh_out:
-      with open(gh_out, 'a', encoding='utf-8') as fh:
-        fh.write(f"receipts={out}\n")
-    PY
+        set -euo pipefail
+        python - <<'PY'
+import glob, os, subprocess, json, sys
+raw = "${{ inputs.paths }}"
+patterns = [p for p in raw.split(',') if p.strip()]
+files = [f for g in patterns for f in glob.glob(g.strip(), recursive=True)]
+if not files:
+  print('warning: no files matched', file=sys.stderr)
+receipts = []
+for f in files:
+  subprocess.check_call(['ots', 'stamp', f])
+  r = f + '.ots'
+  if "${{ inputs.upgrade }}".lower() == "true":
+    subprocess.call(['ots', 'upgrade', r])
+  receipts.append(r)
+out = json.dumps(receipts)
+gh_out = os.environ.get('GITHUB_OUTPUT')
+if gh_out:
+  with open(gh_out, 'a', encoding='utf-8') as fh:
+    fh.write(f"receipts={out}\n")
+PY
