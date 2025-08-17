@@ -2,6 +2,17 @@
 
 All notable changes to this Action will be documented here.
 
+## [v1.0.3] - 2025-08-16
+
+### Fixed (parser)
+
+- Resolved remaining YAML parser errors by normalizing literal block indentation.
+- Consolidated run block and embedded Python script with consistent indent under `run: |`.
+
+### Notes (v1.0.3)
+
+- Moving tag `v1` will be advanced to this version.
+
 ## [v1.0.2] - 2025-08-16
 
 ### Fixed
@@ -30,6 +41,7 @@ All notable changes to this Action will be documented here.
 
 - Initial release of iStampit Timestamp composite action.
 
+[v1.0.3]: https://github.com/SinAi-Inc/istampit-action/releases/tag/v1.0.3
 [v1.0.2]: https://github.com/SinAi-Inc/istampit-action/releases/tag/v1.0.2
 [v1.0.1]: https://github.com/SinAi-Inc/istampit-action/releases/tag/v1.0.1
 [v1.0.0]: https://github.com/SinAi-Inc/istampit-action/releases/tag/v1.0.0
