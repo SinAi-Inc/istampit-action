@@ -1,0 +1,26 @@
+name: Self Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  stamp-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout action repo
+        uses: actions/checkout@v4
+      - name: Create sample artifact
+        run: |
+          echo "hello self-test" > sample.txt
+      - name: Run local action
+        id: action
+        uses: ./
+        with:
+          paths: sample.txt
+      - name: Show receipts
+        if: success()
+        run: |
+          echo "Receipts: ${{ steps.action.outputs.receipts }}" || true
