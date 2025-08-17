@@ -12,6 +12,10 @@ Composite GitHub Action that:
 3. Produces `.ots` receipts and (optionally) upgrades them against calendars
 4. Lets you upload receipts as workflow artifacts or attach them to GitHub Releases
 
+![Usage Demo](./docs/usage-demo.gif)
+
+> Placeholder GIF: add a short capture of stamping a file locally and showing the .ots receipt.
+
 ---
 
 ## 🔧 Usage
@@ -50,6 +54,18 @@ PY
 * `receipts` — JSON array of generated `.ots` receipt file paths.
 
 Access with `${{ steps.stamp.outputs.receipts }}` (stringified JSON array). Parse as needed.
+
+## 🔒 Provenance (Optional)
+
+Add SLSA provenance generation to assert build integrity (planned). A future workflow will attach a provenance attestation to each release.
+
+## 📝 Releases
+
+See CHANGELOG and GitHub Releases:
+
+* v1.0.3 – Parser stability, badges corrected, CI self-test green.
+* v1.0.2 – Manifest fix + branding + outputs via GITHUB_OUTPUT.
+
 
 ## 📜 License
 
