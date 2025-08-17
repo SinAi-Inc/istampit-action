@@ -1,3 +1,5 @@
+permissions:
+  contents: read
 name: Nightly Upgrade Dummy Receipt
 on:
   schedule:
