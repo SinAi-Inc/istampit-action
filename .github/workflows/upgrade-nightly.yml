@@ -1,0 +1,25 @@
+name: Nightly Upgrade Dummy Receipt
+on:
+  schedule:
+    - cron: '21 2 * * *'
+  workflow_dispatch: {}
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create dummy file
+        run: echo "nightly" > nightly.txt
+      - name: Stamp
+        id: stamp
+        uses: ./
+        with:
+          paths: "nightly.txt"
+          upgrade: "false"
+      - name: Attempt upgrade
+        run: |
+          if [ -f nightly.txt.ots ]; then
+            ots upgrade nightly.txt.ots || true
+          fi
+      - name: List receipts
+        run: ls -l *.ots || true

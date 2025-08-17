@@ -1,30 +1,56 @@
-# iStampit GitHub Action — Stamp your releases & artifacts
+# iStampit GitHub Action — Timestamp your releases & artifacts
 
-![Release Sign](https://github.com/<org>/<repo>/actions/workflows/release-sign.yml/badge.svg)
-![Verify Security Artifacts](https://github.com/<org>/<repo>/actions/workflows/verify-security-artifacts.yml/badge.svg)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-iStampit--action-blue?logo=github)](https://github.com/marketplace/actions/istampit-timestamp)
+[![Example Workflow](https://github.com/SinAi-Inc/istampit-action/actions/workflows/example.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/example.yml)
+[![CodeQL](https://github.com/SinAi-Inc/istampit-action/actions/workflows/codeql.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/SinAi-Inc/istampit-action/badge)](https://securityscorecards.dev/viewer/?uri=github.com/SinAi-Inc/istampit-action)
 
-Composite Action that:
+Composite GitHub Action that:
 
-1. Installs the OpenTimestamps client
+1. Installs the [OpenTimestamps](https://opentimestamps.org/) client
 2. Hashes target files
-3. Produces `.ots` receipts and uploads them as workflow artifacts or release assets
+3. Produces `.ots` receipts and (optionally) upgrades them against calendars
+4. Lets you upload receipts as workflow artifacts or attach them to GitHub Releases
 
-## Usage
+---
+
+## 🔧 Usage
 
 ```yaml
-- uses: sinai-inc/istampit-action@v1
-  with:
-    paths: "dist/**/*"
-    upgrade: "true"
+jobs:
+  stamp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Timestamp artifacts
+        id: stamp
+        uses: SinAi-Inc/istampit-action@v1
+        with:
+          paths: "dist/**/*"
+          upgrade: "true"
+      - name: Show receipts
+        run: |
+          echo "Receipts: ${{ steps.stamp.outputs.receipts }}"
+          python - <<'PY'
+import json, os
+receipts = json.loads(os.environ['RECEIPTS'])
+print('\n'.join(receipts))
+PY
+        env:
+          RECEIPTS: ${{ steps.stamp.outputs.receipts }}
 ```
 
-See `.github/workflows/example.yml` for a full workflow example.
+## 📥 Inputs
 
-## Inputs
+* `paths` (**required**) — comma-separated glob(s) of files to stamp.
+* `upgrade` (optional, default `false`) — attempt calendar upgrade for better attestations.
 
-- `paths` (required) comma-separated glob(s)
-- `upgrade` (optional, default false) attempt calendar upgrade
+## 📤 Outputs
 
-## License
+* `receipts` — JSON array of generated `.ots` receipt file paths.
 
-MIT (action code). OTS client under LGPL-3.0.
+Access with `${{ steps.stamp.outputs.receipts }}` (stringified JSON array). Parse as needed.
+
+## 📜 License
+
+MIT (wrapper code). OTS client is LGPL-3.0.

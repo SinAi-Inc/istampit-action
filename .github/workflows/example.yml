@@ -1,19 +1,20 @@
-name: Stamp Release Assets
-on:
-  release:
-    types: [published]
-permissions:
-  contents: read
+name: Example iStampit Action
+on: [push]
 jobs:
   stamp:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./ # local action reference
+      - name: Create dummy file
+        run: echo "hello" > test.txt
+      - name: Run local action
+        id: stamp
+        uses: ./
         with:
-          paths: "dist/**/*"
+          paths: "test.txt"
           upgrade: "true"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ots-receipts
-          path: "**/*.ots"
+      - name: Verify receipt exists
+        run: test -f test.txt.ots && echo "Receipt OK" || (echo "Missing receipt" && exit 1)
+      - name: Show receipts output
+        run: |
+          echo "Receipts: ${{ steps.stamp.outputs.receipts }}"
