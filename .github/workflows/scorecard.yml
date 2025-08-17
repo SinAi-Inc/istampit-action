@@ -9,12 +9,13 @@ on:
 
 permissions:
   contents: read
-  security-events: write
-  id-token: write
 
 jobs:
   analysis:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
