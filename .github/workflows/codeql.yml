@@ -10,29 +10,24 @@ on:
 
 jobs:
   analyze:
-    name: Analyze (CodeQL)
+    name: Analyze (CodeQL actions)
     runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
       security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'python' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
+      - name: Initialize CodeQL (actions)
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: actions
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+      # No build step needed for actions-only analysis
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: '/language:${{ matrix.language }}'
+          category: '/language:actions'
