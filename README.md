@@ -1,7 +1,7 @@
 # iStampit GitHub Action — Timestamp your releases & artifacts
 
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-iStampit--action-blue?logo=github)](https://github.com/marketplace/actions/istampit-timestamp)
-[![Example Workflow](https://github.com/SinAi-Inc/istampit-action/actions/workflows/example.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/example.yml)
+[![Self Test](https://github.com/SinAi-Inc/istampit-action/actions/workflows/self-test.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/self-test.yml)
 [![CodeQL](https://github.com/SinAi-Inc/istampit-action/actions/workflows/codeql.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/codeql.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/SinAi-Inc/istampit-action/badge)](https://securityscorecards.dev/viewer/?uri=github.com/SinAi-Inc/istampit-action)
 
@@ -54,3 +54,7 @@ Access with `${{ steps.stamp.outputs.receipts }}` (stringified JSON array). Pars
 ## 📜 License
 
 MIT (wrapper code). OTS client is LGPL-3.0.
+
+---
+
+The moving tag `v1` always points to the latest stable, parser-verified release.
