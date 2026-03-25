@@ -8,7 +8,7 @@ jobs:
   stamp:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Create dummy file
         run: echo "hello" > test.txt
       - name: Run local action
