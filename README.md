@@ -1,5 +1,10 @@
 # iStampit GitHub Action — Timestamp your releases & artifacts
 
+> [!WARNING]
+> **This action is retired.** iStampit was sunset in May 2026. This repository is archived for reference. No new releases will be published.
+>
+> See the [iStampit retirement notice](https://istampit.io/) for details.
+
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-iStampit--action-blue?logo=github)](https://github.com/marketplace/actions/istampit-timestamp)
 [![Self Test](https://github.com/SinAi-Inc/istampit-action/actions/workflows/self-test.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/self-test.yml)
 [![CodeQL](https://github.com/SinAi-Inc/istampit-action/actions/workflows/codeql.yml/badge.svg)](https://github.com/SinAi-Inc/istampit-action/actions/workflows/codeql.yml)
